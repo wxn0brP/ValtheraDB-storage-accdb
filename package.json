@@ -1,0 +1,59 @@
+{
+	"name": "@wxn0brp/db-storage-accdb",
+	"version": "0.100.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"description": "A pure ACCDB storage adapter for the ValtheraDB database library",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wxn0brP/ValtheraDB-storage-accdb.git"
+	},
+	"homepage": "https://github.com/wxn0brP/ValtheraDB-storage-accdb",
+	"author": "wxn0brP",
+	"license": "MIT",
+	"type": "module",
+	"keywords": [
+		"valthera",
+		"valtheradb",
+		"vdb-adapter",
+		"accdb"
+	],
+	"scripts": {
+		"build": "tsc && tsc-alias"
+	},
+	"devDependencies": {
+		"@types/bun": "*",
+		"@wxn0brp/db-core": "~0.10.0",
+		"tsc-alias": "*",
+		"typescript": "*"
+	},
+	"dependencies": {
+		"odbc": "^2.5.0"
+	},
+	"peerDependencies": {
+		"@wxn0brp/db-core": "~0.10.0"
+	},
+	"peerDependenciesMeta": {
+		"@wxn0brp/db-core": {
+			"optional": false
+		},
+		"better-sqlite3": {
+			"optional": true
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"default": "./dist/index.js"
+		},
+		"./*": {
+			"types": "./dist/*.d.ts",
+			"import": "./dist/*.js",
+			"default": "./dist/*.js"
+		}
+	}
+}
