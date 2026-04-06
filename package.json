@@ -23,15 +23,15 @@
 	},
 	"devDependencies": {
 		"@types/bun": "*",
-		"@wxn0brp/db-core": "~0.10.0",
-		"tsc-alias": "*",
-		"typescript": "*"
+		"@wxn0brp/db-core": "^0.10.2",
+		"tsc-alias": "^1",
+		"typescript": "^6"
 	},
 	"dependencies": {
 		"odbc": "^2.5.0"
 	},
 	"peerDependencies": {
-		"@wxn0brp/db-core": "~0.10.0"
+		"@wxn0brp/db-core": "^0.10.2"
 	},
 	"peerDependenciesMeta": {
 		"@wxn0brp/db-core": {
