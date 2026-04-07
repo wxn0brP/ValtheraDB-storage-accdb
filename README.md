@@ -5,7 +5,7 @@ A simple ACCDB (Microsoft Access) storage adapter for the **ValtheraDB** databas
 ## Installation
 
 ```bash
-npm install @wxn0brp/db-storage-accdb
+npm i github:wxn0brP/db-storage-accdb#dist
 ```
 
 ### ODBC Driver Prerequisites
