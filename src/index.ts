@@ -1,7 +1,7 @@
 import { genId, ValtheraClass } from "@wxn0brp/db-core";
 import { ActionsBase } from "@wxn0brp/db-core/base/actions";
 import { Data } from "@wxn0brp/db-core/types/data";
-import * as Query from "@wxn0brp/db-core/types/query";
+import { VQueryT } from "@wxn0brp/db-core/types/query";
 import odbc from "odbc";
 import { find } from "./find";
 import { remove } from "./remove";
@@ -12,7 +12,7 @@ import { escapeValue } from "./utils";
 export class AccDBValthera extends ActionsBase {
     _inited = true;
 
-    constructor(public db: SupportedDB) {
+    constructor(public db: SupportedDB, public primaryKey: Record<string, string> = {}) {
         super();
     }
 
@@ -21,7 +21,7 @@ export class AccDBValthera extends ActionsBase {
         return result.map((row: any) => row.TABLE_NAME || row.table_name);
     }
 
-    async add(config: Query.AddQuery): Promise<Data> {
+    async add(config: VQueryT.Add): Promise<Data> {
         const { data, id_gen = true, collection } = config;
 
         if (id_gen && !data._id) data._id = genId();
@@ -34,41 +34,41 @@ export class AccDBValthera extends ActionsBase {
         return data;
     }
 
-    find(config: Query.FindQuery): Promise<Data[]> {
+    find(config: VQueryT.Find) {
         return find(this, config);
     }
 
-    async findOne(config: Query.FindQuery): Promise<Data | null> {
+    async findOne(config: VQueryT.Find) {
         config.dbFindOpts = { limit: 1 };
         const result = await this.find(config);
         return result.length ? result[0] : null;
     }
 
-    update(config: Query.UpdateQuery) {
+    update(config: VQueryT.Update) {
         return update(this, config, false);
     }
 
-    async updateOne(config: Query.UpdateQuery) {
+    async updateOne(config: VQueryT.Update) {
         const res = await update(this, config, true);
         return res[0] || null;
     }
 
-    remove(config: Query.RemoveQuery) {
+    remove(config: VQueryT.Remove) {
         return remove(this, config, false);
     }
 
-    async removeOne(config: Query.RemoveQuery) {
+    async removeOne(config: VQueryT.Remove) {
         const res = await remove(this, config, true);
         return res[0] || null;
     }
 
-    async removeCollection(collection: string): Promise<boolean> {
+    async removeCollection(collection: string) {
         const sql = `DROP TABLE [${collection}]`;
         await this.db.query(sql);
         return true;
     }
 
-    async issetCollection(collection: string): Promise<boolean> {
+    async issetCollection(collection: string) {
         try {
             const sql = `SELECT TOP 1 * FROM [${collection}]`;
             await this.db.query(sql);
@@ -78,7 +78,7 @@ export class AccDBValthera extends ActionsBase {
         }
     }
 
-    async ensureCollection(collection: string): Promise<boolean> {
+    async ensureCollection(collection: string) {
         const issetCollection = await this.issetCollection(collection);
         if (!issetCollection)
             throw new Error(`Collection "${collection}" not found. Please create it first.`);
@@ -87,11 +87,17 @@ export class AccDBValthera extends ActionsBase {
     }
 }
 
-export function createAccDBValthera(db: SupportedDB) {
-    const dbAction = new AccDBValthera(db);
+export function createAccDBValthera(db: SupportedDB, primaryKey: Record<string, string> = {}) {
+    const dbAction = new AccDBValthera(db, primaryKey);
     return new ValtheraClass({ dbAction });
 }
 
 export function makeConnect(file: string) {
     return odbc.connect(`Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=${file}`);
+}
+
+export const DYNAMIC = {
+    async accdb(file: string, keys: Record<string, string> = {}) {
+        return createAccDBValthera(await makeConnect(file), keys);
+    }
 }

@@ -28,7 +28,9 @@ import { createAccDBValthera, makeConnect } from "@wxn0brp/db-storage-accdb";
 const conn = await makeConnect('path/to/your/database.accdb');
 
 // 2. Wrap it with the Valthera storage adapter
-const db = createAccDBValthera(conn);
+const db = createAccDBValthera(conn, {
+  Users: "id" // define the primary key (default: "_id")
+});
 
 // 3. Get collection (table) instances
 const User = db.c("Users");

@@ -1,31 +1,25 @@
-import { Data, DataInternal } from "@wxn0brp/db-core/types/data";
-import { RemoveQuery } from "@wxn0brp/db-core/types/query";
-import { hasFieldsAdvanced } from "@wxn0brp/db-core/utils/hasFieldsAdvanced";
+import { DataInternal } from "@wxn0brp/db-core/types/data";
+import { VQueryT } from "@wxn0brp/db-core/types/query";
 import { AccDBValthera } from ".";
+import { find } from "./find";
 import { escapeValue } from "./utils";
 
-export async function remove(slv: AccDBValthera, query: RemoveQuery, one: boolean) {
-    const { collection, search, context } = query;
+export async function remove(slv: AccDBValthera, query: VQueryT.Remove, one: boolean) {
+    const { collection } = query;
 
-    const allEntries: Data[] = (await slv.db.query(`SELECT * FROM [${collection}]`)) as any[];
-
-    const toDelete: Data[] = [];
-
-    for (const entry of allEntries) {
-        const match = typeof search === "function"
-            ? search(entry, context)
-            : hasFieldsAdvanced(entry, search);
-
-        if (match) {
-            toDelete.push(entry);
-            if (one) break;
+    const toDelete = await find(slv, {
+        ...query,
+        dbFindOpts: {
+            limit: one ? 1 : undefined
         }
-    }
+    });
 
     if (!toDelete.length) return [];
 
+    const key = slv.primaryKey[collection] || "_id";
+
     for (const entry of toDelete)
-        await slv.db.query(`DELETE FROM [${collection}] WHERE [_id] = ${escapeValue(entry._id)}`);
+        await slv.db.query(`DELETE FROM [${collection}] WHERE [${key}] = ${escapeValue(entry[key])}`);
 
     return toDelete as DataInternal[];
 }

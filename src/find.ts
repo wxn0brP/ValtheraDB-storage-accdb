@@ -1,11 +1,11 @@
 import { Data } from "@wxn0brp/db-core/types/data";
-import { FindQuery } from "@wxn0brp/db-core/types/query";
+import { VQueryT } from "@wxn0brp/db-core/types/query";
 import { findUtil } from "@wxn0brp/db-core/utils/action";
 import { hasFieldsAdvanced } from "@wxn0brp/db-core/utils/hasFieldsAdvanced";
 import { AccDBValthera } from ".";
 import { escapeValue } from "./utils";
 
-export async function find(slv: AccDBValthera, config: FindQuery): Promise<Data[]> {
+export async function find(slv: AccDBValthera, config: VQueryT.Find): Promise<Data[]> {
     const { collection, search, context } = config;
 
     let sqlResult: any[] = [];
