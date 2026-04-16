@@ -1,6 +1,6 @@
 {
 	"name": "@wxn0brp/db-storage-accdb",
-	"version": "0.100.0",
+	"version": "0.101.0",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "A pure ACCDB storage adapter for the ValtheraDB database library",
