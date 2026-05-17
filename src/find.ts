@@ -1,12 +1,12 @@
 import { Data } from "@wxn0brp/db-core/types/data";
 import { VQueryT } from "@wxn0brp/db-core/types/query";
 import { findUtil } from "@wxn0brp/db-core/utils/action";
-import { hasFieldsAdvanced } from "@wxn0brp/db-core/utils/hasFieldsAdvanced";
+import { findObj } from "@wxn0brp/db-core/utils/process";
 import { AccDBValthera } from ".";
 import { escapeValue } from "./utils";
 
 export async function find(slv: AccDBValthera, config: VQueryT.Find): Promise<Data[]> {
-    const { collection, search, context } = config;
+    const { collection, search } = config;
 
     let sqlResult: any[] = [];
 
@@ -23,17 +23,11 @@ export async function find(slv: AccDBValthera, config: VQueryT.Find): Promise<Da
         sqlResult = (await slv.db.query(baseSql)) as any[];
     }
 
-    let result = sqlResult.filter(entry =>
-        typeof search === "function" ? search(entry, context) : hasFieldsAdvanced(entry, search)
-    );
+    const result = sqlResult.filter(entry => findObj(entry, search));
 
     return findUtil(
         config,
-        {
-            find() {
-                return result;
-            }
-        } as any,
+        result,
         [null]
     )
 }
