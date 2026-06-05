@@ -49,7 +49,7 @@ await User.updateOne({ name: "John Doe" }, { age: 31 });
 await User.remove({ name: "John Doe" });
 
 // Ensure connection is closed after your app finishes
-await conn.close();
+await db.close();
 ```
 
 ## Why? Idk

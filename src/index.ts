@@ -16,6 +16,10 @@ export class AccDBValthera extends ActionsBase {
         super();
     }
 
+    async close() {
+        await this.db.close();
+    }
+
     async getCollections(): Promise<string[]> {
         const result = await this.db.tables(null, null, null, "TABLE");
         return result.map((row: any) => row.TABLE_NAME || row.table_name);
