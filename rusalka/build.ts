@@ -1,1 +1,1 @@
-export const publishToNpm = true;
+export const publishToNpm = false;
