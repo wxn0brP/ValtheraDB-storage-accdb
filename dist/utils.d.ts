@@ -1,0 +1,9 @@
+export declare const VID = "__vid";
+export declare const SPILL = "__vfields";
+export declare function escapeValue(val: any): string;
+export declare function sqlString(value: unknown): string;
+export declare function sqlIdent(name: string): string;
+export declare function isSafeIdent(name: string): boolean;
+export declare function decodeCell(value: unknown): any;
+export declare function normalizeCreateTable(sql: string): string;
+export declare function createTableName(sql: string): string;
